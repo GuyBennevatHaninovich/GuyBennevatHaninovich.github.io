@@ -1,16 +1,29 @@
-let size, posY, gravity, velY, posX, halfSize, minimumDistance, xCenter, yCenter, distance, b, obstacleSize, bg, gameSound;
+let size, posY, gravity, velY, posX, halfSize, minimumDistance, xCenter, yCenter, distance, b, obstacleSize, gameSound;
 let speed = 5;
 let obstacles = [];
 let spawnRate = 2000;
 let llamaSprite = [];
 let objectSprite = [];
+let bg = [];
 let imgNum = 0;
+let bgNum = 0;
 let r = 0;
+let score = 0;
+let font;
+
 
 function preload() {
-  soundFormats('mp3', 'ogg');
+  soundFormats('mp3');
   gameSound = loadSound('music.mp3');
-  bg = loadImage("images/background.jpg");
+  font = loadFont('PressStartP2.ttf')
+  bg[0] = loadImage("background/0.png");
+  bg[1] = loadImage("background/1.png");
+  bg[2] = loadImage("background/2.png");
+  bg[3] = loadImage("background/3.png");
+  bg[4] = loadImage("background/4.png");
+  bg[5] = loadImage("background/5.png");
+  bg[6] = loadImage("background/6.png");
+  bg[7] = loadImage("background/7.png");
   llamaSprite[0] = loadImage('images/llama0.png');
   llamaSprite[1] = loadImage('images/llama1.png');
   llamaSprite[2] = loadImage('images/llama2.png');
@@ -20,25 +33,27 @@ function preload() {
   llamaSprite[6] = loadImage('images/llama6.png');
   objectSprite[0] = loadImage('images/fence.png');
   objectSprite[1] = loadImage('images/car.png');
+  objectSprite[2] = loadImage('images/trashcan.png')
 
 }
 
 
 function setup() {
+  createCanvas(800,400);
   gameSound.setVolume(0.1);
   gameSound.play();
-  gameSound.playMode('sustain');
-  createCanvas(800,400);
+  gameSound.loop();
   dino = new Dino();
   setInterval(newObstacle, spawnRate);
 }
 
 function draw() {
-  background(bg);
+  background(bg[bgNum])
   stroke(0);
   rect(0, height - 80, width, height - 80)
   dino.show(imgNum);
   if (frameCount % 5 == 0) {
+    bgNum = (bgNum + 1) % 8
     imgNum = (imgNum + 1) % 7
   }
   dino.jump();
@@ -48,12 +63,15 @@ function draw() {
     obstacles[i].update();
     if (obstacles[i].hits() === true) {
       gameOver();
-      gameSound.stop();
     }
     if (obstacles[i].x < 0) {
       obstacles.splice(i, 1);
+      score += 1;
     }
   }
+  textFont(font);
+  fill(255);
+  text("Score: " + score, width - 200, 50)
 }
 
 
@@ -61,8 +79,18 @@ function draw() {
 function gameOver() {
   noLoop();
   noStroke();
+  textFont(font);
   textSize(40);
+  fill(255);
   text("GAME OVER", width / 2, height / 2);
   textSize(20);
-  text("Press f5 to restart", width / 2, height / 2 + 20);
+  let reset = createButton("Press here to restart");
+  reset.position(width / 2, height / 2 + 20);
+  reset.mousePressed(refreshPage);
+  gameSound.stop();
+}
+
+function refreshPage(){
+    window.location.reload();
+    gameSound.play();
 }

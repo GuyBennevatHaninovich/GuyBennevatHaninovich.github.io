@@ -8,11 +8,12 @@ function Obstacle(img) {
     if (r == 0) {
       image(img, this.x, height - 125, 50, 50)
     }
+    else if (r== 2) {
+      image(img, this.x, height - 120, 40, 50)
+    }
     else {
       image(img, this.x, height - 95, 50)
     }
-    // fill(0);
-    // rect(this.x, height - 100, this.w, this.w);
   }
 
   this.update = function () {
@@ -34,5 +35,5 @@ function newObstacle () {
     b = new Obstacle(objectSprite[r], this.x, height - 125);
     obstacles.push(b);
     speed += 0.3
-    spawnRate -= 150
+    spawnRate *= 0.5
 }
