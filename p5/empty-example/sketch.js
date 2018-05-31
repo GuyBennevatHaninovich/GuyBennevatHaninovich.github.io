@@ -10,11 +10,13 @@ let bgNum = 0;
 let r = 0;
 let score = 0;
 let font;
+let highscore = localStorage.getItem("highscore");
 
 
 function preload() {
   soundFormats('mp3');
   gameSound = loadSound('music.mp3');
+  winSound = loadSound('win.mp3');
   font = loadFont('PressStartP2.ttf')
   bg[0] = loadImage("background/0.png");
   bg[1] = loadImage("background/1.png");
@@ -69,9 +71,21 @@ function draw() {
       score += 1;
     }
   }
+  if(highscore !== null){
+    if (score > highscore) {
+      localStorage.setItem("highscore", score);
+      highscore = score
+    }
+    if (score == highscore) {
+      winSound.play();
+    }}
+  else{
+    localStorage.setItem("highscore", score);
+  }
   textFont(font);
   fill(255);
-  text("Score: " + score, width - 200, 50)
+  let scoreText = text("Score: " + score, width - 200, 50)
+  text("Highscore: " + highscore, 10, 50)
 }
 
 
